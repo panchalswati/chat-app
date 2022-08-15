@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, Button, ImageBackground } from 'react-native';
 
 export default class Start extends Component {
-    constructor(prop) {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             name: "",
             color: '#090C08'
