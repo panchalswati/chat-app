@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
+//import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -11,6 +12,9 @@ export default class Chat extends React.Component {
         super();
         this.state = {
             messages: [],
+            user: {
+                name: '',
+            },
         };
 
         if (!firebase.apps.length) {
@@ -34,17 +38,16 @@ export default class Chat extends React.Component {
 
         this.referenceChatMessages = firebase.firestore().collection("messages");
 
-        this.authUnsunscribe = firebase.auth().onAuthStateChanged((user) => {
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
             if (!user) {
                 firebase.auth().signInAnonymously();
             }
             this.setState({
-                uid: user.uid,
                 messages: [],
                 user: {
-                    _id: user.uid,
-                    name: name,
-                    avatar: "https://placeimg.com/140/140/any",
+                    _id: 1,
+                    name: `Hello ${this.props.route.params.name}`,
+
                 },
             });
             this.unsubscribe = this.referenceChatMessages
@@ -59,28 +62,27 @@ export default class Chat extends React.Component {
 
     onCollectionUpdate = (querySnapshot) => {
         const messages = [];
-        querySnapshot.foeEach((doc) => {
+        querySnapshot.forEach((doc) => {
             var data = doc.data();
             messages.push({
                 _id: data._id,
-                text: data.text,
+                text: data.text || '',
                 createdAT: data.createdAt.toDate(),
                 user: {
                     _id: data.user._id,
                     name: data.user.name,
-                    avatar: data.user.avatar
+
                 },
             });
         });
         this.setState({
-            messages: messages,
+            messages
         });
     };
 
     addMessages() {
         const message = this.state.messages[0];
         this.referenceChatMessages.add({
-            uid: this.state.uid,
             _id: message._id,
             text: message.text || "",
             createdAt: message.createdAt,
@@ -117,7 +119,6 @@ export default class Chat extends React.Component {
                     messages={this.state.messages}
                     onSend={messages => this.onSend(messages)}
                     user={{
-                        _id: this.state.user._id,
                         name: name,
                         avatar: this.state.user.avatar
                     }} />
