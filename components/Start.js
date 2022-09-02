@@ -1,22 +1,25 @@
-import React, { Component } from 'react';
-import { StyleSheet, Pressable, View, Text, TextInput, ImageBackground } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React from 'react';
+import { View, Text, Button, StyleSheet, Pressable, ImageBackground, TouchableOpacity, TextInput, } from 'react-native';
 
-export default class Start extends Component {
+// Importing the default background image from the assets folder
+import BackgroundImage from "../assets/Background-Image.png";
+
+
+export default class Start extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             name: "",
-            bgColor: "",
+            bgColor: this.colors.pink,
         };
     }
 
-    //dunction to update state with new background color
+    // function to update the state with the new background color for Chat Screen chosen by the user
     changeBgColor = (newColor) => {
         this.setState({ bgColor: newColor });
     };
-
-    //colors to choose
+    // backgroud colors to choose
     colors = {
         black: "#090C08",
         purple: "#474056",
@@ -27,19 +30,25 @@ export default class Start extends Component {
 
     render() {
         return (
+            // Components to create the color arrays, titles and the app's colors
             <View style={styles.container}>
-                <ImageBackground source={require('../assets/Background-Image.png')} style={styles.backgroundImage} resizeMode="cover" >
+                <ImageBackground
+                    source={BackgroundImage}
+                    resizeMode="cover"
+                    style={styles.backgroundImage}
+                >
                     <View style={styles.titleBox}>
                         <Text style={styles.title}>Chat App</Text>
                     </View>
 
                     <View style={styles.box1}>
                         <View style={styles.inputBox}>
-                            <TextInput style={styles.input}
-                                onChangeText={(text) =>
-                                    this.setState({ name: text })}
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => this.setState({ name: text })}
                                 value={this.state.name}
-                                placeholder="What is your name?" />
+                                placeholder="What is your name?"
+                            />
                         </View>
 
                         <View style={styles.colorBox}>
@@ -49,17 +58,16 @@ export default class Start extends Component {
                             </Text>
                         </View>
 
+                        {/* All the colors to change the background are here! */}
                         <View style={styles.colorArray}>
                             <TouchableOpacity
                                 style={styles.color1}
-                                onPress={() => this.changeBgColor(this.colors.black)}>
-                            </TouchableOpacity>
-
+                                onPress={() => this.changeBgColor(this.colors.black)}
+                            ></TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.color2}
-                                onPress={() => this.changeBgColor(this.colors.purple)}>
-                            </TouchableOpacity>
-
+                                onPress={() => this.changeBgColor(this.colors.purple)}
+                            ></TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.color3}
                                 onPress={() => this.changeBgColor(this.colors.grey)}
@@ -70,6 +78,7 @@ export default class Start extends Component {
                             ></TouchableOpacity>
                         </View>
 
+                        {/*This will allow the user to click on a button and be redirected to the chat page */}
                         <Pressable
                             style={styles.button}
                             onPress={() =>
@@ -88,6 +97,7 @@ export default class Start extends Component {
     }
 }
 
+// Creating the app's stylesheet, fixing sizes, centering items, changing colors
 const styles = StyleSheet.create({
     container: {
         flex: 1,
